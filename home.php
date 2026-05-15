@@ -101,6 +101,7 @@ if(isset($_POST['occasion'])) {
 <html>
 <head>
 <title>E-Cart Recommender</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
@@ -377,6 +378,118 @@ body {
     padding: 16px 10px;
     color: rgba(255,255,255,0.45);
     font-size: 13px;
+}
+
+.saved-outfit-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    position: relative;
+    transition: all 0.25s ease;
+}
+
+.saved-outfit-card:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,126,179,0.3);
+}
+
+.saved-outfit-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+    padding-right: 28px;
+    line-height: 1.4;
+}
+
+.saved-outfit-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.saved-platform-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.saved-platform-badge.amazon { background: rgba(255,153,0,0.2); color: #ffaa33; }
+.saved-platform-badge.flipkart { background: rgba(47,128,237,0.2); color: #5ba3f5; }
+.saved-platform-badge.meesho { background: rgba(243,68,130,0.2); color: #f56b9a; }
+
+.saved-outfit-fabric {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+}
+
+.saved-outfit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.saved-view-btn {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4ac3ff, #2b7dff);
+    color: white;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.saved-view-btn:hover {
+    transform: translateY(-1px);
+}
+
+.saved-remove-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,100,100,0.15);
+    color: #ff7b7b;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.saved-remove-btn:hover {
+    background: rgba(255,100,100,0.3);
+    transform: scale(1.15);
+}
+
+.saved-count-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: auto;
 }
 
 /* SEARCH */
@@ -887,6 +1000,311 @@ body {
 }
 
 </style>
+
+<style>
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Tablet & small laptop */
+@media screen and (max-width: 900px) {
+    .hero-card {
+        grid-template-columns: 1fr;
+        padding: 30px 24px;
+        gap: 24px;
+    }
+
+    .hero-copy h1 {
+        font-size: 34px;
+    }
+
+    .hero-copy p {
+        font-size: 15px;
+    }
+
+    .hero-right-card {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .content-section {
+        padding: 0 16px 30px;
+    }
+
+    .title {
+        font-size: 26px;
+        letter-spacing: 1px;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 640px) {
+    .top-bar {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+    }
+
+    .menu {
+        position: relative;
+        left: 0;
+        top: auto;
+        transform: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        flex-shrink: 0;
+    }
+
+    .menu::before {
+        top: 10px;
+        box-shadow: 0 8px 0 white;
+    }
+
+    .menu::after {
+        bottom: 10px;
+    }
+
+    .menu::before,
+    .menu::after {
+        width: 22px;
+        height: 2.5px;
+    }
+
+    .menu:hover {
+        transform: scale(1.05);
+    }
+
+    .menu:active {
+        transform: scale(0.95);
+    }
+
+    .title {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+        flex: 1;
+        text-align: center;
+        padding: 0 8px;
+        line-height: 1.3;
+    }
+
+    .sidebar {
+        width: calc(100vw - 60px);
+        max-width: 300px;
+        padding: 16px;
+    }
+
+    .profile-img-container {
+        width: 90px;
+        height: 90px;
+    }
+
+    .profile-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .content-section {
+        margin-top: 20px;
+        padding: 0 12px 30px;
+    }
+
+    .hero-card {
+        grid-template-columns: 1fr;
+        padding: 24px 18px;
+        border-radius: 22px;
+        gap: 20px;
+    }
+
+    .hero-copy h1 {
+        font-size: 26px;
+        letter-spacing: -0.02em;
+    }
+
+    .hero-copy p {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .hero-badges {
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+    .hero-badges span {
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .hero-right-card {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .hero-stat {
+        padding: 14px 12px;
+        border-radius: 16px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 11px;
+    }
+
+    .hero-actions {
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .primary-btn,
+    .secondary-btn.alt {
+        padding: 12px 22px;
+        font-size: 14px;
+    }
+
+    .search-box {
+        margin-top: 40px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-box input {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .search-box button {
+        width: 100%;
+    }
+
+    .search-container {
+        margin-top: 40px;
+        flex-direction: column;
+    }
+
+    .camera-container {
+        margin-top: 40px;
+    }
+
+    .modal-content {
+        width: 92%;
+        max-width: none;
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    .modal-content img {
+        max-height: 350px;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .card img {
+        height: 120px;
+    }
+
+    .floating-menu {
+        top: 10px;
+        left: 10px;
+        font-size: 22px;
+        padding: 6px 10px;
+    }
+
+    .chatbot-container {
+        width: calc(100% - 32px);
+        left: 16px;
+        transform: none;
+        bottom: 70px;
+        max-height: 350px;
+    }
+}
+
+/* Small mobile */
+@media screen and (max-width: 400px) {
+    .title {
+        font-size: 13px;
+    }
+
+    .hero-copy h1 {
+        font-size: 22px;
+    }
+
+    .hero-card {
+        padding: 20px 14px;
+    }
+
+    .hero-right-card {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+    }
+
+    .stat-value {
+        font-size: 18px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .primary-btn,
+    .secondary-btn.alt {
+        text-align: center;
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+
+    .sidebar {
+        width: calc(100vw - 40px);
+        padding: 14px;
+    }
+
+    .profile-img-container {
+        width: 76px;
+        height: 76px;
+    }
+
+    .profile-img {
+        width: 68px;
+        height: 68px;
+    }
+
+    .products {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .card {
+        padding: 8px;
+        border-radius: 12px;
+    }
+
+    .card img {
+        height: 100px;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -953,9 +1371,11 @@ body {
         ?>
     </div>
 
-    <div class="menu-item" onclick="togglePanel('savedPanel')">💾 Saved Outfits</div>
+    <div class="menu-item" onclick="togglePanel('savedPanel'); loadSavedOutfits();">💾 Saved Outfits <span id="savedCountBadge" class="saved-count-badge" style="display:none;"></span></div>
     <div id="savedPanel" class="expandable-panel">
-        <div class="saved-empty">✨ Your saved outfits will appear here.<br>Use the AI Recommender to discover looks!</div>
+        <div id="savedOutfitsContainer">
+            <div class="saved-empty">✨ Your saved outfits will appear here.<br>Use the AI Recommender to discover looks!</div>
+        </div>
     </div>
 
     <div class="menu-divider"></div>
@@ -1048,6 +1468,122 @@ function togglePanel(panelId) {
         target.style.display = 'block';
     }
 }
+
+let savedOutfitsLoaded = false;
+
+function loadSavedOutfits() {
+    const container = document.getElementById('savedOutfitsContainer');
+
+    fetch('save_outfit.php?action=list')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (!data.outfits || data.outfits.length === 0) {
+                container.innerHTML = '<div class="saved-empty">✨ Your saved outfits will appear here.<br>Use the AI Recommender to discover looks!</div>';
+                updateSavedBadge(0);
+                return;
+            }
+
+            updateSavedBadge(data.outfits.length);
+            let html = '';
+            data.outfits.forEach(function(outfit) {
+                const platformClass = (outfit.platform || '').toLowerCase();
+                const platformLabel = outfit.platform ? outfit.platform.charAt(0).toUpperCase() + outfit.platform.slice(1) : '';
+                const link = outfit.product_link || '#';
+                const fabricText = outfit.fabric_details ? outfit.fabric_details.substring(0, 60) : '';
+
+                html += '<div class="saved-outfit-card" data-name="' + escapeAttr(outfit.product_name) + '">';
+                html += '<button class="saved-remove-btn" onclick="removeSavedOutfit(this, \'' + escapeAttr(outfit.product_name).replace(/'/g, "\\'") + '\')" title="Remove">✕</button>';
+                html += '<div class="saved-outfit-name">' + escapeHtml(outfit.product_name) + '</div>';
+                html += '<div class="saved-outfit-meta">';
+                if (platformLabel) {
+                    html += '<span class="saved-platform-badge ' + platformClass + '">' + platformLabel + '</span>';
+                }
+                html += '</div>';
+                if (fabricText) {
+                    html += '<div class="saved-outfit-fabric">' + escapeHtml(fabricText) + '</div>';
+                }
+                html += '<div class="saved-outfit-actions">';
+                if (link !== '#') {
+                    html += '<a href="' + escapeAttr(link) + '" target="_blank" class="saved-view-btn">View on ' + platformLabel + '</a>';
+                }
+                html += '</div>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            savedOutfitsLoaded = true;
+        })
+        .catch(function(err) {
+            console.error('Failed to load saved outfits:', err);
+        });
+}
+
+function removeSavedOutfit(btn, productName) {
+    const card = btn.closest('.saved-outfit-card');
+    card.style.opacity = '0.4';
+    card.style.pointerEvents = 'none';
+
+    const formData = new FormData();
+    formData.append('action', 'unsave');
+    formData.append('product_name', productName);
+
+    fetch('save_outfit.php', { method: 'POST', body: formData })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.maxHeight = card.scrollHeight + 'px';
+            requestAnimationFrame(function() {
+                card.style.maxHeight = '0';
+                card.style.opacity = '0';
+                card.style.marginBottom = '0';
+                card.style.padding = '0 12px';
+                card.style.borderColor = 'transparent';
+            });
+            setTimeout(function() {
+                card.remove();
+                const container = document.getElementById('savedOutfitsContainer');
+                const remaining = container.querySelectorAll('.saved-outfit-card');
+                if (remaining.length === 0) {
+                    container.innerHTML = '<div class="saved-empty">✨ Your saved outfits will appear here.<br>Use the AI Recommender to discover looks!</div>';
+                }
+                updateSavedBadge(remaining.length);
+            }, 350);
+        })
+        .catch(function(err) {
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+            console.error('Remove error:', err);
+        });
+}
+
+function updateSavedBadge(count) {
+    const badge = document.getElementById('savedCountBadge');
+    if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
+}
+
+function escapeAttr(text) {
+    return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// Load saved count on page load
+fetch('save_outfit.php?action=list')
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+        if (data.outfits && data.outfits.length > 0) {
+            updateSavedBadge(data.outfits.length);
+        }
+    })
+    .catch(function() {});
 </script>
 
 </body>

@@ -70,6 +70,7 @@ if(isset($_POST['signup'])) {
 <html>
 <head>
 <title>Signup</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
 body {
@@ -237,6 +238,55 @@ a {
 
 a:hover {
     color: #d1e9ff;
+}
+
+/* ========== RESPONSIVE ========== */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 16px;
+        align-items: flex-start;
+        padding-top: 40px;
+    }
+
+    .box {
+        padding: 28px 20px;
+        border-radius: 24px;
+    }
+
+    .logo-icon {
+        font-size: 26px;
+    }
+
+    .logo h1 {
+        font-size: 20px;
+    }
+
+    .box h2 {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+        margin-bottom: 22px;
+    }
+
+    input,
+    input[type="file"] {
+        max-width: 100%;
+        padding: 14px 16px;
+        font-size: 15px;
+        border-radius: 16px;
+        box-sizing: border-box;
+    }
+
+    button {
+        padding: 14px 0;
+        font-size: 15px;
+    }
+
+    .login-link {
+        font-size: 13px;
+    }
 }
 </style>
 

@@ -261,6 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['image'], $_POST['age'
 <html>
 <head>
 <title>Outfit Recommendations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
 <style>
 body {
@@ -427,6 +428,7 @@ input::placeholder {
 }
 
 .recommendation-card {
+    position: relative;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(14px);
     border-radius: 20px;
@@ -461,6 +463,281 @@ input::placeholder {
     color: #4ade80;
     font-weight: 600;
 }
+
+/* Save button */
+.save-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.save-btn:hover {
+    background: rgba(255, 126, 179, 0.25);
+    transform: scale(1.15);
+    box-shadow: 0 6px 20px rgba(255, 126, 179, 0.3);
+    border-color: rgba(255, 126, 179, 0.4);
+}
+
+.save-btn svg {
+    width: 22px;
+    height: 22px;
+    transition: all 0.3s ease;
+}
+
+.save-btn .save-outline {
+    stroke: rgba(255, 255, 255, 0.8);
+    fill: none;
+    stroke-width: 2;
+    transition: all 0.3s ease;
+}
+
+.save-btn.saved .save-outline {
+    fill: #ff7eb3;
+    stroke: #ff7eb3;
+}
+
+.save-btn.saved {
+    background: rgba(255, 126, 179, 0.2);
+    border-color: rgba(255, 126, 179, 0.4);
+    animation: savePopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes savePopIn {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.save-btn .save-tooltip {
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.save-btn:hover .save-tooltip {
+    opacity: 1;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Tablet */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 20px 12px 30px;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-top: 40px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .back-btn {
+        top: 12px;
+        left: 12px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    video, canvas {
+        max-width: 100%;
+        border-radius: 16px;
+    }
+
+    form {
+        max-width: 100%;
+        padding: 22px 18px;
+        border-radius: 22px;
+        margin-top: 20px;
+    }
+
+    .recommendation-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .recommendation-card h3 {
+        font-size: 16px;
+        padding-right: 50px;
+    }
+
+    .recommendation-card p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .save-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .save-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Mobile */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 14px 10px 24px;
+    }
+
+    h1 {
+        font-size: 18px;
+        margin-top: 48px;
+        line-height: 1.3;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .back-btn {
+        top: 10px;
+        left: 10px;
+        padding: 7px 10px;
+        font-size: 13px;
+    }
+
+    .camera-container {
+        gap: 12px;
+    }
+
+    video, canvas {
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+        padding: 11px 20px;
+        font-size: 14px;
+        border-radius: 22px;
+    }
+
+    form {
+        padding: 18px 14px;
+        border-radius: 18px;
+        gap: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    input[type="number"],
+    input[type="text"] {
+        padding: 14px 14px;
+        font-size: 15px;
+        border-radius: 14px;
+    }
+
+    #analyzeBtn {
+        padding: 14px 16px;
+        font-size: 15px;
+        border-radius: 20px;
+    }
+
+    .recommendations {
+        gap: 14px;
+        margin-top: 24px;
+    }
+
+    .recommendation-card {
+        padding: 16px 14px;
+        border-radius: 14px;
+    }
+
+    .recommendation-card h3 {
+        font-size: 15px;
+        margin-top: 0;
+        padding-right: 46px;
+        line-height: 1.4;
+    }
+
+    .recommendation-card p {
+        font-size: 12.5px;
+        margin: 6px 0;
+        word-break: break-word;
+    }
+
+    .recommendation-card a {
+        font-size: 13px;
+        padding: 7px 14px !important;
+    }
+
+    .save-btn {
+        width: 36px;
+        height: 36px;
+        top: 12px;
+        right: 12px;
+    }
+
+    .save-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .save-btn .save-tooltip {
+        display: none;
+    }
+
+    #nextBtn {
+        padding: 11px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Small mobile */
+@media screen and (max-width: 360px) {
+    h1 {
+        font-size: 16px;
+    }
+
+    form {
+        padding: 14px 12px;
+    }
+
+    .recommendation-card {
+        padding: 14px 12px;
+    }
+
+    .recommendation-card h3 {
+        font-size: 14px;
+    }
+}
 </style>
 </head>
 <body>
@@ -471,7 +748,11 @@ input::placeholder {
     <h2>Your Recommendations</h2>
     <div class="recommendations">
         <?php foreach ($recommendations as $index => $rec): ?>
-        <div class="recommendation-card" id="card-<?php echo $index; ?>" data-platform="<?php echo htmlspecialchars(strtolower($rec['platform'])); ?>" data-product="<?php echo htmlspecialchars($rec['product_name']); ?>">
+        <div class="recommendation-card" id="card-<?php echo $index; ?>" data-platform="<?php echo htmlspecialchars(strtolower($rec['platform'])); ?>" data-product="<?php echo htmlspecialchars($rec['product_name']); ?>" data-fabric="<?php echo htmlspecialchars($rec['fabric_details']); ?>" data-tip="<?php echo htmlspecialchars($rec['styling_tip']); ?>" data-link="<?php echo htmlspecialchars($rec['product_link']); ?>">
+            <button class="save-btn" onclick="toggleSave(this, <?php echo $index; ?>)" title="Save outfit">
+                <svg viewBox="0 0 24 24"><path class="save-outline" d="M5 3a2 2 0 0 0-2 2v16l9-4 9 4V5a2 2 0 0 0-2-2H5z"/></svg>
+                <span class="save-tooltip">Save outfit</span>
+            </button>
             <h3><?php echo htmlspecialchars($rec['product_name']); ?></h3>
             <p><strong>Fabric:</strong> <?php echo htmlspecialchars($rec['fabric_details']); ?></p>
             <p><strong>Platform:</strong> <?php echo htmlspecialchars($rec['platform']); ?></p>
@@ -483,18 +764,81 @@ input::placeholder {
     </div>
 
     <script>
-    // Fetch real prices from platforms after page loads
+    // Toggle save/unsave an outfit
+    function toggleSave(btn, index) {
+        const card = document.getElementById('card-' + index);
+        const isSaved = btn.classList.contains('saved');
+        const productName = card.getAttribute('data-product');
+        const action = isSaved ? 'unsave' : 'save';
+
+        const formData = new FormData();
+        formData.append('action', action);
+        formData.append('product_name', productName);
+
+        if (!isSaved) {
+            formData.append('fabric_details', card.getAttribute('data-fabric'));
+            formData.append('platform', card.getAttribute('data-platform'));
+            formData.append('styling_tip', card.getAttribute('data-tip'));
+            formData.append('product_link', card.getAttribute('data-link'));
+        }
+
+        fetch('save_outfit.php', { method: 'POST', body: formData })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.status === 'saved' || data.status === 'already_saved') {
+                    btn.classList.add('saved');
+                    btn.querySelector('.save-tooltip').textContent = 'Saved!';
+                } else if (data.status === 'removed') {
+                    btn.classList.remove('saved');
+                    btn.querySelector('.save-tooltip').textContent = 'Save outfit';
+                }
+            })
+            .catch(function(err) {
+                console.error('Save error:', err);
+            });
+    }
+
+    // Fetch real prices and check saved status after page loads
     document.addEventListener('DOMContentLoaded', function() {
         const cards = document.querySelectorAll('.recommendation-card[data-platform]');
         let delay = 0;
 
+        // Collect all product names to check saved status
+        const productNames = [];
+        cards.forEach(function(card) {
+            productNames.push(card.getAttribute('data-product'));
+        });
+
+        // Check which outfits are already saved
+        if (productNames.length > 0) {
+            const checkData = new FormData();
+            checkData.append('action', 'check');
+            checkData.append('product_names', JSON.stringify(productNames));
+
+            fetch('save_outfit.php', { method: 'POST', body: checkData })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.saved && data.saved.length > 0) {
+                        cards.forEach(function(card) {
+                            const name = card.getAttribute('data-product');
+                            if (data.saved.indexOf(name) !== -1) {
+                                const btn = card.querySelector('.save-btn');
+                                btn.classList.add('saved');
+                                btn.querySelector('.save-tooltip').textContent = 'Saved!';
+                            }
+                        });
+                    }
+                })
+                .catch(function(err) { console.error('Check saved error:', err); });
+        }
+
+        // Fetch prices
         cards.forEach(function(card, i) {
             const platform = card.getAttribute('data-platform');
             const product  = card.getAttribute('data-product');
             const priceEl  = document.getElementById('price-' + i);
             const linkEl   = document.getElementById('link-' + i);
 
-            // Stagger requests by 300ms to avoid rate limiting
             setTimeout(function() {
                 fetch('fetch_price.php?platform=' + encodeURIComponent(platform) + '&q=' + encodeURIComponent(product))
                     .then(function(res) { return res.json(); })
@@ -505,7 +849,6 @@ input::placeholder {
                         } else {
                             priceEl.innerHTML = '<strong>Price:</strong> <a href="' + linkEl.href + '" target="_blank" style="color:#4ac3ff;">Check price on ' + platform.charAt(0).toUpperCase() + platform.slice(1) + '</a>';
                         }
-                        // Update the link to point directly to the product page if available
                         if (data.url) {
                             linkEl.href = data.url;
                         }
