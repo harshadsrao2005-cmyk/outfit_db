@@ -688,7 +688,7 @@ body {
     border-radius: 15px;
     text-align: center;
     position: relative;
-    border: 2px solid rgba(255, 126, 179, 0.5);
+    border: 2px solid rgba(255, 126, 179,0.5);
 }
 
 /* Image inside modal */
