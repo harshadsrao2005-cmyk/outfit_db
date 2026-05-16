@@ -1,62 +1,54 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+if(!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit();
+}
+
 $conn = new mysqli("localhost", "root", "", "outfit_db");
+$userEmail = $_SESSION['user'];
+
+// Ensure user is verified
+$verifyCheck = $conn->query("SELECT is_verified FROM users WHERE email='$userEmail'");
+if($row = $verifyCheck->fetch_assoc()) {
+    if($row['is_verified'] == 0) {
+        header("Location: verify_otp.php");
+        exit();
+    }
+} else {
+    // User not found in DB
+    header("Location: logout.php");
+    exit();
+}
 
 $message = "";
 
-if(isset($_POST['login'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// Ensure username column exists
+$columnCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'username'");
+if($columnCheck && $columnCheck->num_rows === 0) {
+    $conn->query("ALTER TABLE users ADD COLUMN username VARCHAR(50) NULL");
+}
 
-    // Validate email format and provider
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $message = "invalid_credentials";
+if(isset($_POST['set_username'])) {
+    $username = trim($conn->real_escape_string($_POST['username']));
+
+    if($username === '') {
+        $message = "Please enter a username.";
     } else {
-        $emailDomain = strtolower(substr(strrchr($email, "@"), 1));
+        $email = $_SESSION['user'];
+        $stmt = $conn->prepare("UPDATE users SET username = ? WHERE email = ?");
+        $stmt->bind_param('ss', $username, $email);
 
-        $knownProviders = [
-            'gmail.com', 'googlemail.com',
-            'yahoo.com', 'yahoo.in', 'yahoo.co.in', 'yahoo.co.uk',
-            'outlook.com', 'hotmail.com', 'live.com', 'msn.com',
-            'icloud.com', 'me.com', 'mac.com',
-            'aol.com',
-            'protonmail.com', 'proton.me',
-            'zoho.com', 'zohomail.in',
-            'rediffmail.com',
-            'mail.com',
-            'gmx.com', 'gmx.net',
-            'yandex.com', 'yandex.ru',
-            'tutanota.com', 'tuta.com',
-            'fastmail.com',
-            'hey.com',
-            'pm.me'
-        ];
-
-        $isKnownProvider = in_array($emailDomain, $knownProviders);
-        $hasMxRecords = checkdnsrr($emailDomain, 'MX');
-
-        if(!$isKnownProvider && !$hasMxRecords) {
-            $message = "invalid_credentials";
+        if($stmt->execute()) {
+            header("Location: home.php");
+            exit();
         } else {
-            $sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
-            $result = $conn->query($sql);
-
-            if($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
-                $_SESSION['user'] = $email;
-                
-                if(isset($user['is_verified']) && $user['is_verified'] == 0) {
-                    header("Location: verify_otp.php");
-                } else if(empty($user['username'])) {
-                    header("Location: set_username.php");
-                } else {
-                    header("Location: home.php");
-                }
-                exit();
-            } else {
-                $message = "invalid_credentials";
-            }
+            $message = "Error: " . $conn->error;
         }
+        $stmt->close();
     }
 }
 ?>
@@ -64,7 +56,7 @@ if(isset($_POST['login'])) {
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Set Username</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
@@ -136,12 +128,18 @@ body {
     margin-right: auto;
 }
 
-.signup-link {
-    margin-top: 20px;
-    color: rgba(255,255,255,0.75);
-    font-size: 14px;
+.welcome-emoji {
+    font-size: 56px;
+    margin-bottom: 16px;
+    display: block;
+    animation: wave 2s ease-in-out infinite;
 }
 
+@keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-10deg); }
+}
 
 input {
     width: 100%;
@@ -156,6 +154,7 @@ input {
     outline: none;
     transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
     display: block;
+    box-sizing: border-box;
 }
 
 input::placeholder {
@@ -192,7 +191,6 @@ button:active {
     transform: translateY(0);
 }
 
-
 .message {
     margin-top: 16px;
     font-weight: 600;
@@ -201,39 +199,12 @@ button:active {
     line-height: 1.6;
 }
 
-.message.warning {
-    color: #ffd866;
-}
-
-.message a {
-    color: #4ac3ff;
-    text-decoration: underline;
-    font-weight: 700;
-}
-
-.message a:hover {
-    color: #8bd5ff;
-}
-
-.success {
-    color: #8be7a8;
-}
-
-a {
-    color: #8bd5ff;
-    text-decoration: none;
-}
-
-a:hover {
-    color: #d1e9ff;
-}
-
 /* ========== RESPONSIVE ========== */
 @media screen and (max-width: 480px) {
     body {
         padding: 16px;
         align-items: flex-start;
-        padding-top: 60px;
+        padding-top: 40px;
     }
 
     .box {
@@ -263,7 +234,6 @@ a:hover {
         padding: 14px 16px;
         font-size: 15px;
         border-radius: 16px;
-        box-sizing: border-box;
     }
 
     button {
@@ -271,8 +241,8 @@ a:hover {
         font-size: 15px;
     }
 
-    .signup-link {
-        font-size: 13px;
+    .welcome-emoji {
+        font-size: 44px;
     }
 }
 </style>
@@ -286,29 +256,18 @@ a:hover {
         <span class="logo-icon">👗</span>
         <h1>Outfit Recommender</h1>
     </div>
-    <h2>Welcome Back</h2>
-    <p class="subtitle">Sign in to your account and discover personalized outfit recommendations powered by AI.</p>
+    <span class="welcome-emoji">👋</span>
+    <h2>Almost There!</h2>
+    <p class="subtitle">Choose a username that will be displayed on your profile. You can pick anything you like!</p>
 
     <form method="post">
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <input type="password" name="password" placeholder="Enter your password" required>
-        <div style="text-align: right; margin: -5px 15px 15px 0;">
-            <a href="forgot_password.php" style="font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none;">Forgot Password?</a>
-        </div>
-        <button type="submit" name="login">Sign In</button>
+        <input type="text" name="username" placeholder="Enter your username" required autofocus maxlength="50">
+        <button type="submit" name="set_username">Continue →</button>
     </form>
 
-    <?php if(isset($_GET['reset']) && $_GET['reset'] === 'success'): ?>
-        <p class="message success" style="color: #4affb1; background: rgba(74, 255, 177, 0.1); padding: 12px; border-radius: 12px; margin-bottom: 20px;">✅ Password reset successful!<br>Please sign in with your new password.</p>
+    <?php if($message !== ''): ?>
+        <p class="message"><?php echo $message; ?></p>
     <?php endif; ?>
-
-    <?php if($message === 'signup_first'): ?>
-        <p class="message warning">⚠️ No account found with this email.<br>Please <a href="signup.php">Sign Up</a> first before logging in.</p>
-    <?php elseif($message === 'invalid_password'): ?>
-        <p class="message">❌ Incorrect password. Please try again.</p>
-    <?php endif; ?>
-
-    <p class="signup-link">New here? <a href="signup.php">Create an account</a></p>
 </div>
 
 </body>

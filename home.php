@@ -7,7 +7,7 @@ if(!isset($_SESSION['user'])) {
 }
 
 $conn = new mysqli("localhost", "root", "", "outfit_db");
-$profileImg = 'https://via.placeholder.com/120/111827/ffffff?text=User';
+$profileImg = 'images/default_avatar.png';
 $userEmail = $_SESSION['user'];
 $successMessage = '';
 $errorMessage = '';
@@ -62,13 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     }
 }
 
-$profileStmt = $conn->prepare("SELECT profile_pic FROM users WHERE email = ?");
+$displayName = $userEmail;
+$profileStmt = $conn->prepare("SELECT profile_pic, username FROM users WHERE email = ?");
 if ($profileStmt) {
     $profileStmt->bind_param('s', $userEmail);
     $profileStmt->execute();
-    $profileStmt->bind_result($profilePic);
-    if ($profileStmt->fetch() && !empty($profilePic)) {
-        $profileImg = $profilePic;
+    $profileStmt->bind_result($profilePic, $dbUsername);
+    if ($profileStmt->fetch()) {
+        if (!empty($profilePic)) {
+            $profileImg = $profilePic;
+        }
+        if (!empty($dbUsername)) {
+            $displayName = $dbUsername;
+        }
     }
     $profileStmt->close();
 }
@@ -1328,7 +1334,7 @@ body {
             <img src="<?php echo htmlspecialchars($profileImg); ?>" class="profile-img" alt="Profile Picture">
         </div>
         <p class="profile-email">
-            <?php echo htmlspecialchars($_SESSION['user']); ?>
+            <?php echo htmlspecialchars($displayName); ?>
         </p>
     </div>
 

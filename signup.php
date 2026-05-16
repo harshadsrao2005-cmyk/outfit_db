@@ -4,6 +4,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 $conn = new mysqli("localhost", "root", "", "outfit_db");
+date_default_timezone_set('Asia/Kolkata');
+require_once 'send_mail.php';
 
 $message = "";
 
@@ -43,20 +45,47 @@ if(isset($_POST['signup'])) {
         }
 
         if($profilePicPath === '') {
-            $profilePicPath = 'https://via.placeholder.com/120/111827/ffffff?text=User';
+            $profilePicPath = 'images/default_avatar.png';
         }
 
         $check = "SELECT * FROM users WHERE email='$email'";
         $result = $conn->query($check);
 
         if($result->num_rows > 0) {
-            $message = "already_registered";
+            $existingUser = $result->fetch_assoc();
+            if(isset($existingUser['is_verified']) && $existingUser['is_verified'] == 0) {
+                // User registered but not verified, send new OTP
+                $otp = rand(100000, 999999);
+                $otp_expiry = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+                
+                $updateSql = "UPDATE users SET otp='$otp', otp_expiry='$otp_expiry' WHERE email='$email'";
+                if($conn->query($updateSql) === TRUE) {
+                    $_SESSION['user'] = $email;
+                    
+                    // Send OTP Email using PHPMailer
+                    sendOTP($email, $otp);
+                    
+                    header("Location: verify_otp.php");
+                    exit();
+                } else {
+                    $message = "Error: " . $conn->error;
+                }
+            } else {
+                $message = "already_registered";
+            }
         } else {
-            $sql = "INSERT INTO users (email, password, profile_pic) VALUES ('$email', '$password', '$profilePicPath')";
+            $otp = rand(100000, 999999);
+            $otp_expiry = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+            
+            $sql = "INSERT INTO users (email, password, profile_pic, otp, otp_expiry, is_verified) VALUES ('$email', '$password', '$profilePicPath', '$otp', '$otp_expiry', 0)";
             
             if($conn->query($sql) === TRUE) {
                 $_SESSION['user'] = $email;
-                header("Location: home.php");
+                
+                // Send OTP Email using PHPMailer
+                sendOTP($email, $otp);
+                
+                header("Location: verify_otp.php");
                 exit();
             } else {
                 $message = "Error: " . $conn->error;

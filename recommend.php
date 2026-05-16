@@ -9,12 +9,12 @@ if(!isset($_SESSION['user'])) {
 
 // Configuration
 $apiKeys = [
-    'AIzaSyDHUdqGhfnpf521KLf_-M2TuQJSE4FWGFk',
-    'AIzaSyAwikZQggqEUMAVJJMULOzIfXZfL_shgbc',
-    'AIzaSyDUAsaLFOMvIojPMSRDGUkalZ8EYrMyAjE',
-    'AIzaSyD80vq9956WAllimNQTyJbbzpPyO9hQLYM',
-    'AIzaSyDmBNocEIuoQI_gVvQYzg8qsBfiwKnfEL8',
-    'AIzaSyDsX_QoPvnwLE_Oh86jFW8vW-qpEwe77AQ'
+    'AIzaSyAd3cpXzMqaxrgKJ5d8rB_UHDJDDxM4oSQ',
+    'AIzaSyAlBlB8Pc4Wp8OrwTv_51MwcjF8-vmsmFc',
+    'AIzaSyA_6blHgjstu6dyY0w9l6NbtmgN9Wio6UE',
+    'AIzaSyBUxIOe3PxyOgbLCx4bpARYAjgPR4mqEbU',
+    'AIzaSyAxJM1amqbskUUoYJFdRdxuLYcJeTehAhk',
+    'AIzaSyDHBPIy5DxHUeAT_s91l_9ytryyqN2gqqU'
 ];
 
 // Gemini agents – ordered by priority; auto-fallback when limit is exceeded
